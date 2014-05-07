@@ -86,7 +86,7 @@ public class Udpclient {
 			querySnTimer.cancel();
 	}
     public void setSendWifiInfo(String ssid,String pwd,String auth_mode,String encryp_type,
-    		String channel,String _sn)
+    		String channel,String _sn,String _userid)
     {
     	//check input paramter
     	//if(_userid.length() > 20 )
@@ -115,7 +115,7 @@ public class Udpclient {
     		return;
     	}
     	sn = _sn;
-    	//userid=_userid;
+    	userid=_userid;
     	send_msg =  new byte[105];
     	int len=0;
     	operations.logudp("setwifi:"+ssid+"-"+pwd+"-"+auth_mode+"-"+encryp_type+"-"+channel);
@@ -137,7 +137,7 @@ public class Udpclient {
     	bytes =sn.getBytes();
     	System.arraycopy(bytes,0,send_msg,len,bytes.length);len+=10;
     	
-    	bytes =userid.getBytes();
+    	//bytes =userid.getBytes();
     	System.arraycopy(bytes,0,send_msg,len,bytes.length);len+=10;
 
     	//bytes = flag.getBytes();

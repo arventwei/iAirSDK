@@ -190,13 +190,13 @@ implements WifiBroadCastOperations , Udpclient.UdpclientOperations{
  * @param vsn
  * @param homeId
  */
-	public void Config(String SSID,String Pwd,String _sn)
+	public void Config(String SSID,String Pwd,String _sn,String _userid)
 	{
 		mCurState = State.Config;
 		SSID = SSID.replace("\"", "");
 		//application.setWifibackupPwd(Pwd);
 		//wifibackupPwd = Pwd;
-		//userid=_userid;
+		userid=_userid;
 		sn=_sn;
 		
 		//if(mCurState == State.Config)
@@ -204,7 +204,7 @@ implements WifiBroadCastOperations , Udpclient.UdpclientOperations{
 		List<String> detailinfo = getWifiDetailInfo(SSID);
 		udpclient.setSendWifiInfo(SSID, Pwd,
 				detailinfo.get(0), detailinfo.get(1),
-					detailinfo.get(2),sn);
+					detailinfo.get(2),sn,userid);
 			
 			//udpclient.Looper();
 		//}
