@@ -27,8 +27,14 @@ import com.txmcu.iairsdk.wifi.WifiHotManager;
 
 
 /**
- * 
- * @author Oliver
+ * APP和设备通讯连接类
+ * app通过UDP协议和设备连接
+ * 连接成功后，app发送WIFI 的SSID，密码等信息
+ * 设备收到后，发送receive给app
+ * app收到后，断开和设备的连接。
+ * app连接服务器，查询是否设备注册成功，此过程会执行多次，
+ * 查询成功后，添加设备，否则提示添加失败
+ * @author Administrator
  *
  */
 public class Udpclient {
@@ -80,7 +86,7 @@ public class Udpclient {
 			querySnTimer.cancel();
 	}
     public void setSendWifiInfo(String ssid,String pwd,String auth_mode,String encryp_type,
-    		String channel,String _sn,String _userid,String vsn,String homeId)
+    		String channel,String _sn)
     {
     	//check input paramter
     	//if(_userid.length() > 20 )
@@ -90,13 +96,13 @@ public class Udpclient {
     	//vsn:20
     	//flag 1 ,0-home,1-vsn
     	//home or vsn 19 bytes
-    	String  flag = "1";
-    	if (homeId.length()>0) {
-    		flag = "0";
-		}
-    	else if (vsn.length()>0){
-    		flag = "1";
-		}
+//    	String  flag = "1";
+//    	if (homeId.length()>0) {
+//    		flag = "0";
+//		}
+//    	else if (vsn.length()>0){
+//    		flag = "1";
+//		}
     	
     	if(ssid.length()>20 ||pwd.length()>20)
     	{
@@ -109,7 +115,7 @@ public class Udpclient {
     		return;
     	}
     	sn = _sn;
-    	userid=_userid;
+    	//userid=_userid;
     	send_msg =  new byte[105];
     	int len=0;
     	operations.logudp("setwifi:"+ssid+"-"+pwd+"-"+auth_mode+"-"+encryp_type+"-"+channel);
@@ -137,17 +143,17 @@ public class Udpclient {
     	//bytes = flag.getBytes();
     	//System.arraycopy(bytes, 0, send_msg, len, bytes.length);len+=1;
     	
-    	if (flag.equals("1")) {
-    		send_msg[len]=1;len+=1;
-    		bytes =vsn.getBytes();
-    		
-        	System.arraycopy(bytes,0,send_msg,len,bytes.length);len+=19;
-		}
-    	else {
-    		send_msg[len]=0;len+=1;
-    		bytes =homeId.getBytes();
-        	System.arraycopy(bytes,0,send_msg,len,bytes.length);len+=19;
-		}
+//    	if (flag.equals("1")) {
+//    		send_msg[len]=1;len+=1;
+//    		bytes =vsn.getBytes();
+//    		
+//        	System.arraycopy(bytes,0,send_msg,len,bytes.length);len+=19;
+//		}
+//    	else {
+//    		send_msg[len]=0;len+=1;
+//    		bytes =homeId.getBytes();
+//        	System.arraycopy(bytes,0,send_msg,len,bytes.length);len+=19;
+//		}
     	
     	recvingMsg = "";
     	//stateCode=100;
@@ -193,9 +199,10 @@ public class Udpclient {
             case initApState:
             {
             	stateCode=initApState;
-            	/*
-            	 * 姣�3�?����??��???�妫����?��??���?
-            	 */
+				            	
+				/**
+				 * 
+				 */
             	connectApTimer = new CountDownTimer(leftTime, 3000) 
             	{
 
@@ -205,10 +212,10 @@ public class Udpclient {
        		    	 
        		    	 if(stateCode!=initApState)
        		    		 return;
-       		    	 /*
-       		    	  * �?����?���������?WIFI���������?XIAOXIN_AP,濡�����??����???�����?????��??��??��?����???��AP,濡�������???�������?��?��??��??����??��??����?���?
-       		    	  * 
-       		    	  */
+       		    	
+       		    	 		/**
+       		    	 		 * 
+       		    	 		 */
        		    	 
 	       		    	leftTime = millisUntilFinished;
 		       		    WifiInfo curWifi =wifiHotM.getConnectWifiInfo();
@@ -216,23 +223,25 @@ public class Udpclient {
 		       		    if (curWifi!=null) {
 							reasonString = curWifi.getSupplicantState().toString();
 		       		    }
-		       		    /*
-		       		     * ???����??��?����??��??�濮��?����??���?
-		       		     */
+		       		   
+		       		    	/**
+		       		    	 * 
+		       		    	 */
 	       		    	operations.logudp(iAirConstants.XIAOXIN_SSID+" dis connected " + reasonString);
 	       		    	
 	       		    	Boolean isOkBoolean = false;
-	       		    	/*
-	       		    	 * ���褰�������?WIFI�????������??��??�����?��??����??���?����
+	       		    	/**
+	       		    	 * 
 	       		    	 */
 	       		    	String curSSIDString = "";
 	       		        if( curWifi!=null && curWifi.getSSID()!=null)
 	       		        {
 	       		        	curSSIDString = curWifi.getSSID().replace("\"", "");
 	       		        }
-	       		        /*
-	       		         * 褰�����?����???��XIAOINX_AP,����??稿�?��??����??��?��?????��??��??����?���?
-	       		         */
+	       		        
+						/**
+						 * 
+						 */
 	       		        if (curSSIDString.equals(iAirConstants.XIAOXIN_SSID)
 							&& curWifi!=null
 							&& curWifi.getNetworkId()!=-1

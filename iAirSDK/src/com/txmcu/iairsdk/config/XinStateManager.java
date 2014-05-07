@@ -9,13 +9,10 @@ import android.net.wifi.WifiInfo;
 import android.os.CountDownTimer;
 import android.util.Log;
 
-import com.txmcu.iair.R;
-import com.txmcu.iair.common.iAirApplication;
-import com.txmcu.iair.common.iAirConstants;
-import com.txmcu.iair.common.iAirUtil;
-import com.txmcu.iairsdk.config.wifi.WifiHotManager;
-import com.txmcu.iairsdk.config.wifi.WifiHotManager.OpretionsType;
-import com.txmcu.iairsdk.config.wifi.WifiHotManager.WifiBroadCastOperations;
+import com.txmcu.iairsdk.R;
+import com.txmcu.iairsdk.wifi.WifiHotManager;
+import com.txmcu.iairsdk.wifi.WifiHotManager.OpretionsType;
+import com.txmcu.iairsdk.wifi.WifiHotManager.WifiBroadCastOperations;
 
 /**
  * 
@@ -33,7 +30,7 @@ implements WifiBroadCastOperations , Udpclient.UdpclientOperations{
 	
 	static String TAG = "XinStateManager";
 	
-	private iAirApplication application;
+	//private iAirApplication application;
 	
 	public enum ConfigType {
 		Succeed,
@@ -52,8 +49,8 @@ implements WifiBroadCastOperations , Udpclient.UdpclientOperations{
 	public static int TimeOutSecond = 120;
 	
 	/**
-	 * ï¿½ï¿½ï¿½ç??ï¿½ç?¹ï¿½ï¿½ï¿½???ï¿½ï¿½ï¿½ï¿½??¥ï¿½ï½?ï¿½è?¥ï¿½å¸?ï¿½ï¿½
-	 * @author Administrator
+	 * 
+	 * @author Oliver
 	 *
 	 */
 	public static interface XinOperations {
@@ -83,23 +80,25 @@ implements WifiBroadCastOperations , Udpclient.UdpclientOperations{
 	}
 
 
-	/**
-	 * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½??¥ï¿½å¸?ï¿½ï¿½æ¿¡ï¿½ï¿½ï¿½ï¿½è¤°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿?WiFiï¿½ï¿½ï¿½ç????§ï¿½ï¿½ï¿½ï¿½ï¿½XIAOXIN_AP???ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ã??ï¿½ï¿½æ¶?ï¿?WiFiï¿½ï¿½ï¿½ï¿½ï¿½å??ï¿½ï¿½ï¿½ï¿½???ï¿½ï¿½WIFIï¿½ï¿½??µï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½??¤ï¿½ï¿½ç??ï¿?
-	 * @param context
-	 * @param operations
-	 */
+/**
+ * 
+ * @param context
+ * @param operations
+ */
 	private XinStateManager(Activity context,XinOperations operations) {
 		this.context = context;
 		this.operations = operations;
-		this.application = ((iAirApplication)context.getApplication());
+		//this.application = ((iAirApplication)context.getApplication());
 		wifiHotM = WifiHotManager.getInstance(this.context, XinStateManager.this);
 		WifiInfo curWifiInfo = wifiHotM.getConnectWifiInfo();
 		if(curWifiInfo!=null&&curWifiInfo.getSSID()!=null&&curWifiInfo.getSSID().endsWith(iAirConstants.XIAOXIN_SSID))
 		{
 			wifiHotM.removeWifiInfo(curWifiInfo.getNetworkId());
 		}
-		if (curWifiInfo!=null&&curWifiInfo.getNetworkId()==-1) {
-			iAirUtil.toastMessage(context, context.getString(R.string.add_device_no_wifi));
+		if (curWifiInfo!=null&&curWifiInfo.getNetworkId()==-1)
+		{
+			operations.log("no wifi connection");
+			//iAirUtil.toastMessage(context, context.getString(R.string.add_device_no_wifi));
 			
 		}
 		//wifiHotM.scanWifiHot();
@@ -118,7 +117,7 @@ implements WifiBroadCastOperations , Udpclient.UdpclientOperations{
 		//backupCurrentWifiState();
 	}
 	/**
-	 * å¯?ï¿½æ¿®ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿?WIFIï¿½ï¿½ï¿½ç??ï¿?
+	 * ï¿½?ï¿½æ¿®ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½?WIFIï¿½ï¿½ï¿½ï¿½??ï¿½?
 	 */
 	private void startScan() {
 		
@@ -181,23 +180,23 @@ implements WifiBroadCastOperations , Udpclient.UdpclientOperations{
 		     }
 		  }.start();
 	}
-	/**
-	 * ï¿½ï¿½???ï¿½å³°ï¿½ï¿½æ¿?ï¿½ï¿½ï¿½ï¿½ç¼?ï¿½ç????§ï¿½ï¿½é??ï¿½å?????ï¿½ï¿½ç»?ï¿½ï¿½ï¿½ï¿½???ï¿?120ç»?ï¿½ï¿½ï¿½ï¿½
-	 * 
-	 * @param SSID
-	 * @param Pwd
-	 * @param _userid
-	 * @param _sn
-	 * @param vsn
-	 * @param homeId
-	 */
-	public void Config(String SSID,String Pwd,String _userid,String _sn,String vsn,String homeId)
+
+/**
+ * 
+ * @param SSID
+ * @param Pwd
+ * @param _userid
+ * @param _sn
+ * @param vsn
+ * @param homeId
+ */
+	public void Config(String SSID,String Pwd,String _sn)
 	{
 		mCurState = State.Config;
 		SSID = SSID.replace("\"", "");
 		//application.setWifibackupPwd(Pwd);
 		//wifibackupPwd = Pwd;
-		userid=_userid;
+		//userid=_userid;
 		sn=_sn;
 		
 		//if(mCurState == State.Config)
@@ -205,7 +204,7 @@ implements WifiBroadCastOperations , Udpclient.UdpclientOperations{
 		List<String> detailinfo = getWifiDetailInfo(SSID);
 		udpclient.setSendWifiInfo(SSID, Pwd,
 				detailinfo.get(0), detailinfo.get(1),
-					detailinfo.get(2),sn,userid,vsn,homeId);
+					detailinfo.get(2),sn);
 			
 			//udpclient.Looper();
 		//}
@@ -227,8 +226,9 @@ implements WifiBroadCastOperations , Udpclient.UdpclientOperations{
 		
 	}
 
+	
 	/**
-	 * ï¿½ï¿½å³°ï¿½ï¿?WIFIï¿½ï¿½ï¿½ç??ï¿½ç??ï¿½æ?????ï¿½ï¿½???ï¿½æ¿¡ï¿½ï¿½ï¿½ï¿½??µï¿½ï¿½ï¿½??°ï¿½ï¿½é??ï¿½ï¿½ï¿½ï¿½??µï¿½ç»?ï¿½å??ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½æ·????ï¿½ï¿½
+	 * 
 	 * @param ssid
 	 * @return
 	 */
@@ -245,7 +245,7 @@ implements WifiBroadCastOperations , Udpclient.UdpclientOperations{
 			String scanSSIDString = scanRet.SSID.replace("\"", "");
 			if (scanSSIDString.equals(ssid))
 			{
-				int  ch =  iAirUtil.getChannel(scanRet.frequency);
+				int  ch =  getChannel(scanRet.frequency);
 				channel = String.valueOf(ch);
 				logudp(scanRet.capabilities);
 				
@@ -299,12 +299,12 @@ implements WifiBroadCastOperations , Udpclient.UdpclientOperations{
 		ret.add(channel);
 		return ret;
 	}
-	/**
-	 * å¦?ï¿½å¨´ï¿?ssidï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿?listæ¶?ï¿?
-	 * @param list
-	 * @param ssid
-	 * @return
-	 */
+/**
+ * 
+ * @param list
+ * @param ssid
+ * @return
+ */
 	Boolean isWifiContain(List<ScanResult> list,String ssid)
 	{
 		for (ScanResult scanResult : list) {
@@ -317,10 +317,12 @@ implements WifiBroadCastOperations , Udpclient.UdpclientOperations{
 	String userid;
 	String sn;
 	List<ScanResult> _scannlist = new ArrayList<ScanResult>();
-	/**
-	 * æ¾¶ï¿½æµ????ï¿½ï¿½ï¿½ï¿½ï¿½å?¸è??ï¿½ï¿½??©ï¿½ï¿½ï¿½??§ï¿½ï¿?WIFI???ï¿½æ?©ï¿½ï¿½ï¿½??¥ï¿½ï¿½ç????§ï¿½ï¿½ï¿½ï¿½ï¿½???ï¿½ï¿½ï¿½ï¿½???ï¿½ï¿½ï¿½ç?°ï¿½ï¿½è¤°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ç¼?ï¿?
-	 * @param scannlist
-	 */
+	int wifiBackupNetId = -1;
+
+/**
+ * 
+ * @param scannlist
+ */
 	private void backupCurrentWifiState(List<ScanResult> scannlist ) 
 	{
 		
@@ -336,9 +338,11 @@ implements WifiBroadCastOperations , Udpclient.UdpclientOperations{
 		}
 		//application.setWifibackupSSID("");
 		String curSSIDString = "";
-		application.setWifibackupNetId(-1);
+		wifiBackupNetId = -1;
+		//application.setWifibackupNetId(-1);
 		if (info!=null&&info.getSSID()!=null&&!info.getSSID().equals(iAirConstants.XIAOXIN_SSID)) {
-			application.setWifibackupNetId(info.getNetworkId());
+			wifiBackupNetId = info.getNetworkId();
+			//application.setWifibackupNetId(info.getNetworkId());
 			curSSIDString = info.getSSID().replace("\"", "");
 			
 		}
@@ -346,13 +350,14 @@ implements WifiBroadCastOperations , Udpclient.UdpclientOperations{
 		operations.initResult(true,curSSIDString,_scannlist);
 		
 	}
-	/**
-	 * ??©ï¿½ï¿½ï¿½ï¿½æ??ï¿½ï¿½ï¿½ï¿½æ¾¶ï¿½æµ????ï¿½ï¿½?????§ï¿½ï¿½æ?????ï¿½ï¿½
-	 */
+
+/**
+ * 
+ */
 	public void restoreCurrentWifiState() {
 		//operations.log("restoreCurrentWifiState");
-		if(application.getWifibackupNetId()!=-1)
-			wifiHotM.enableNetWorkById(application.getWifibackupNetId());
+		if(wifiBackupNetId!=-1)
+			wifiHotM.enableNetWorkById(wifiBackupNetId);
 	}
 	// wifi scan callback
 	@Override
@@ -393,9 +398,9 @@ implements WifiBroadCastOperations , Udpclient.UdpclientOperations{
 	// wifi connect & scan ,when wifi enable
 	@Override
 	public void operationByType(OpretionsType type, String SSID,String pwd) {
-		Log.i(TAG, "operationByType???ï¿?type = " + type);
+		Log.i(TAG, "operationByType???ï¿½?type = " + type);
 
-		operations.log("operationByType???ï¿?type = " + type);
+		operations.log("operationByType???ï¿½?type = " + type);
 		if (type == OpretionsType.SCAN) {
 			//wifiHotM.scanWifiHot();
 			startScan();
@@ -422,4 +427,56 @@ implements WifiBroadCastOperations , Udpclient.UdpclientOperations{
 		operations.log("udp:" + msg);
 	}
 	
+	
+	
+	 public static int getChannel(int frequency)
+	    {
+	            int channel = 0;
+	            switch(frequency){
+	            case 2412:
+	                    channel = 1;
+	                    break;
+	            case 2417:
+	                    channel = 2;
+	                    break;
+	            case 2422:
+	                    channel = 3;
+	                    break;
+	            case 2427:
+	                    channel = 4;
+	                    break;
+	            case 2432:
+	                    channel = 5;
+	                    break;
+	            case 2437:
+	                    channel = 6;
+	                    break;
+	            case 2442:
+	                    channel = 7;
+	                    break;
+	            case 2447:
+	                    channel = 8;
+	                    break;
+	            case 2452:
+	                    channel = 9;
+	                    break;
+	            case 2457:
+	                    channel = 10;
+	                    break;
+	            case 2462:
+	                    channel = 11;
+	                    break;
+	            case 2467:
+	                    channel = 12;
+	                    break;
+	            case 2472:
+	                    channel = 13;
+	                    break;
+	            case 2484:
+	                    channel = 14;
+	                    break;
+	            }
+	            return channel;
+	    }
+	    
 }
