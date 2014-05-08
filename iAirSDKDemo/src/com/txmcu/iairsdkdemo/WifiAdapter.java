@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.net.wifi.ScanResult;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -80,6 +81,10 @@ public class WifiAdapter extends BaseAdapter
         String level = "" + sResult.level + "%";
         level= level.replace("-", "");
         text2.setText(level);
+        
+       // TextView text = (TextView) view.findViewById(android.R.id.text1);
+        text1.setTextColor(Color.WHITE);
+        text2.setTextColor(Color.WHITE);
 
         return twoLineListItem;
 	}
