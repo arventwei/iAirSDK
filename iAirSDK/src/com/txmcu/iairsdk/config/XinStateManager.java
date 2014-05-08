@@ -70,10 +70,10 @@ implements WifiBroadCastOperations , Udpclient.UdpclientOperations{
 	public static void destroy() {
 		instance = null;
 	}
-	public static XinStateManager getInstance(Activity context,XinOperations operations) {
+	public static XinStateManager getInstance(Activity context) {
 
 		if (instance == null) {
-			instance = new XinStateManager(context,operations);
+			instance = new XinStateManager(context,(XinOperations) context);
 
 		}
 		return instance;
