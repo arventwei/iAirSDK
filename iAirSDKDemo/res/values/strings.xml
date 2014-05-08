@@ -4,5 +4,31 @@
     <string name="app_name">iAirSDKDemo</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    
+    
+     <string name="wait_moment">请稍候</string>
+       
+           <string name="now_loading">正在加载...</string>
+       
+           <string name="i_known">知道了</string>
+       
+           <string name="xiaoxin_login_ok">登陆成功</string>
+       
+           <string name="add_device_ssid">当前网络</string>
+           <string name="add_device_pwd">密码</string>
+           <string name="add_device_sn">序列号</string>
+       
+           <string name="add_device_pwd_hint">请输入您的Wi-Fi密码</string>
+       
+           <string name="add_device_cooldown">开始连接设备 剩余</string>
+       
+           <string name="setting">设置</string>
+       
+           <string name="second">秒</string>
+       
+           <string name="add_device_success">添加成功</string>
+       
+           <string name="add_device_failed">绑定失败</string>
 
+            <string name="please_select_your_wifi">请选择您常用的Wi-Fi网络</string>
 </resources>

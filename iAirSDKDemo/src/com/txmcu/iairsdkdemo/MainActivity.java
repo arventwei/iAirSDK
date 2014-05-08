@@ -22,11 +22,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import com.txmcu.iairsdkdemo.R;
-
+import com.txmcu.iairsdk.config.XinStateManager;
 import com.txmcu.iairsdk.config.XinStateManager.ConfigType;
 import com.txmcu.iairsdk.config.XinStateManager.XinOperations;
-import com.txmcu.iairsdk.config.XinStateManager;
 public class MainActivity extends Activity implements XinOperations,OnClickListener {
 
 	
