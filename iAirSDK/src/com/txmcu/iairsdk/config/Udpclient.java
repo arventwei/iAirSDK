@@ -137,7 +137,7 @@ public class Udpclient {
     	bytes =sn.getBytes();
     	System.arraycopy(bytes,0,send_msg,len,bytes.length);len+=10;
     	
-    	//bytes =userid.getBytes();
+    	bytes =userid.getBytes();
     	System.arraycopy(bytes,0,send_msg,len,bytes.length);len+=10;
 
     	//bytes = flag.getBytes();
@@ -199,10 +199,9 @@ public class Udpclient {
             case initApState:
             {
             	stateCode=initApState;
-				            	
-				/**
-				 * 
-				 */
+            	/*
+            	 * 每3秒间隔，检查状态
+            	 */
             	connectApTimer = new CountDownTimer(leftTime, 3000) 
             	{
 
@@ -212,10 +211,10 @@ public class Udpclient {
        		    	 
        		    	 if(stateCode!=initApState)
        		    		 return;
-       		    	
-       		    	 		/**
-       		    	 		 * 
-       		    	 		 */
+       		    	 /*
+       		    	  * 检查当前的WIFI是否是XIAOXIN_AP,如果不是，则继续尝试连接该AP,如果是，则直接转入下一个状态
+       		    	  * 
+       		    	  */
        		    	 
 	       		    	leftTime = millisUntilFinished;
 		       		    WifiInfo curWifi =wifiHotM.getConnectWifiInfo();
@@ -223,25 +222,23 @@ public class Udpclient {
 		       		    if (curWifi!=null) {
 							reasonString = curWifi.getSupplicantState().toString();
 		       		    }
-		       		   
-		       		    	/**
-		       		    	 * 
-		       		    	 */
+		       		    /*
+		       		     * 输出日志，开始连接了
+		       		     */
 	       		    	operations.logudp(iAirConstants.XIAOXIN_SSID+" dis connected " + reasonString);
 	       		    	
 	       		    	Boolean isOkBoolean = false;
-	       		    	/**
-	       		    	 * 
+	       		    	/*
+	       		    	 * 把当前的WIFI信息名字转换下，去掉引号
 	       		    	 */
 	       		    	String curSSIDString = "";
 	       		        if( curWifi!=null && curWifi.getSSID()!=null)
 	       		        {
 	       		        	curSSIDString = curWifi.getSSID().replace("\"", "");
 	       		        }
-	       		        
-						/**
-						 * 
-						 */
+	       		        /*
+	       		         * 当前连接是XIAOINX_AP,非常好，直接跳转下个状态
+	       		         */
 	       		        if (curSSIDString.equals(iAirConstants.XIAOXIN_SSID)
 							&& curWifi!=null
 							&& curWifi.getNetworkId()!=-1
@@ -252,14 +249,14 @@ public class Udpclient {
 	      		    		 return;
 						}
 	       		        /*
-	       		         * 褰�����?????���?讳��?WIFI�????��???�?Ooops???��??????��?����??��??��
+	       		         * 当前没有任何WIFI信息，Ooops，继续连接吧。
 	       		         */
 	       		        if (curWifi==null ||curWifi.getNetworkId()!=-1) 
 	       		        {
 	       		        	wifiHotM.connectToHotpot(iAirConstants.XIAOXIN_SSID, iAirConstants.XIAOXIN_PWD);
 						}
 	       		        /*
-	       		         * �?��??�������?��宸�??��??���?��??��??�?WIFI�?��??�浣��??��������??����??������??�����?����
+	       		         * 什么情况，已经连上一个WIFI了，但不是我们想要的，断开吧
 	       		         */
 	       		        if (!curSSIDString.equals(iAirConstants.XIAOXIN_SSID)
 	       		        		&& curWifi!=null
@@ -287,7 +284,7 @@ public class Udpclient {
             {
             	stateCode=sendState;
             	/*
-            	 * 姣����?3�?�����?��?????�����?
+            	 * 每隔3秒做一次检查
             	 */
             	sendDataTimer = new CountDownTimer(leftTime, 3000) {
 
@@ -300,7 +297,7 @@ public class Udpclient {
        		    	 
        		    	 operations.logudp(iAirConstants.XIAOXIN_SSID+" send data");
        		    	 /*
-       		    	  * �?����绾跨����������???��???�濡�����?��??�绾�?��???�浼����?����????��??�?�?
+       		    	  * 开启线程发送数据，如果不开线程，会阻塞主线程
        		    	  */
        		    	AsyncTask<Void, Void, Void>  async_cient = new AsyncTask<Void, Void, Void>() 
        		             {
@@ -310,14 +307,14 @@ public class Udpclient {
        		                 	try 
        		     	            {
        		                 		/*
-       		                 		 * ?????��??�?��??��??����?��??3�?����UDP����??��?���?����3�?��??�妫����??������?��?���������?
+       		                 		 * 设置一个超时为3秒的UDP包，这个和3秒一检查，是对应的。
        		                 		 */
        		                     	receiverAddress = InetAddress.getByName(iAirConstants.XIAOXIN_IP);
        		                         ds = new DatagramSocket();
        		                         ds.setSoTimeout(3000);
        		                         
        		                         /*
-       		                          * ����������������?��?����?????�����?WIFI���?SSID���?WIFI??������??��?????��
+       		                          * 构造包的内容，主要是WIFI的SSID和WIFI密码等信息
        		                          */
        		                         DatagramPacket dp;                          
     		                         dp = new DatagramPacket(send_msg, send_msg.length,
@@ -325,7 +322,7 @@ public class Udpclient {
     		                         ds.setBroadcast(true);
     		                         ds.send(dp);
     		                         /*
-    		                          * �?�???������??����??�浼���跺��??���?�?receive���濡�����????����跺��?������????��?????��?????���?�????����??��????������
+    		                          * 正常情况下，会收到一个receive。如果没有收到，则表示，没有正确发给设备。
     		                          */
     		                         byte[] receiveData = new byte[20];
        		     	            	 DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
@@ -334,7 +331,7 @@ public class Udpclient {
        		     	            	 
        		     	            	if(recvingMsg.startsWith("receive"))
        		                 		{
-       		                 			//����??稿�?��??��????�����跺��??��???�����?����?��?����������??����?��??����??����??��??����?���?
+       		                 			//非常好，设备收到了，我们吧状态切换下吧。进入下一个阶段
        		                 			postMessage(queryState);
        		                 			//xinMgr.restoreCurrentWifiState();
        		                 			//setStopLoop(1,"");
@@ -388,9 +385,9 @@ public class Udpclient {
             case queryState:
             {
             	/*
-            	 * app��������??��??���濮��?????���?��??�?
-            	 * ��???��??�?�?��??�����?��??��������????����?����??����??�?
-            	 * ����??�������?SN�?������??����??��??��??��??��?���?�?SN����????����������??����?���?
+            	 * app和服务器开始交互了，
+            	 * 到此为止，我们不再和设备连接了，
+            	 * 我们发送SN给服务器，验证，这个SN的设备是否存在。
             	 */
             	stateCode=queryState;
             	querySnTimer = new CountDownTimer(leftTime, 4000) {

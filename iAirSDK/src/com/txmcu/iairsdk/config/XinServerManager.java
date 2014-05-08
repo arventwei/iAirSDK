@@ -18,10 +18,10 @@ import com.loopj.android.http.RequestParams;
 import com.txmcu.iairsdk.config.iAirConstants;
 
 
-
 /**
+ * APP和服务器沟通的协议，采用HTTP POST + JSON格式交互。
  * 
- * @author Oliver
+ * @author Administrator
  *
  */
 public class XinServerManager {
@@ -34,7 +34,7 @@ public class XinServerManager {
 		public abstract void run(JSONObject response) throws JSONException;
 	}
 	/**
-	 * ???建�??�???��??HTTP�????
+	 * 创建一个新的HTTP连接
 	 * @return
 	 */
 	static private AsyncHttpClient getHttpClient() {
@@ -61,7 +61,7 @@ public class XinServerManager {
 		return 0;
 	}
 /**
- * 解�??JSON??��???????��??
+ * 解析JSON格式的整数
  * @param obj
  * @param key
  * @return
@@ -77,7 +77,7 @@ public class XinServerManager {
 		return 0;
 	}
 /**
- * 解�??JSON ??��?????�?�?�?
+ * 解析JSON 格式的字符串
  * @param obj
  * @param key
  * @return
@@ -95,8 +95,8 @@ public class XinServerManager {
 
 
 	/**
-	 * ???交�??�?请�??�??????��?��??�?�????????????????�??????��????��????��?��??
-	 * ??????�?�????�???��?��?��??
+	 * 提交一个请求给服务器。这个是所有发送消息都调用的函数，
+	 * 是最低层的调用函数。
 	 * @param activity
 	 * @param r
 	 * @param post_params
@@ -143,6 +143,12 @@ public class XinServerManager {
 	}
 
 
+//	A1.1.8 【检查小新是否存在接口】（该步骤为1.1.5的下一步）更新小新的基础信息
+//	1) 请求：http://112.124.58.144/android/checkxiaoxin_exist 
+//	2) form数据：userid=xxx&sn=xxx
+//	3) 返回：
+//	A.成功：{"ret":"Ok"}
+//	B.失败：{"ret":"Fail"}
 	static public void checkxiaoxin_exist(final Activity activity,
 			final String userid,
 			final String sn,

@@ -15,7 +15,7 @@ import com.txmcu.iairsdk.wifi.WifiHotManager.OpretionsType;
 import com.txmcu.iairsdk.wifi.WifiHotManager.WifiBroadCastOperations;
 
 /**
- * 
+ * 设备状态管理器
  * @author Oliver
  *
  */
@@ -49,8 +49,8 @@ implements WifiBroadCastOperations , Udpclient.UdpclientOperations{
 	public static int TimeOutSecond = 120;
 	
 	/**
-	 * 
-	 * @author Oliver
+	 * 回调实现的接口函数，
+	 * @author Administrator
 	 *
 	 */
 	public static interface XinOperations {
@@ -80,11 +80,11 @@ implements WifiBroadCastOperations , Udpclient.UdpclientOperations{
 	}
 
 
-/**
- * 
- * @param context
- * @param operations
- */
+	/**
+	 * 构造函数，如果当前的WiFi是设备的XIAOXIN_AP，则删除这个WiFi。避免用户WIFI状态切换错误
+	 * @param context
+	 * @param operations
+	 */
 	private XinStateManager(Activity context,XinOperations operations) {
 		this.context = context;
 		this.operations = operations;
@@ -117,7 +117,7 @@ implements WifiBroadCastOperations , Udpclient.UdpclientOperations{
 		//backupCurrentWifiState();
 	}
 	/**
-	 * �?�濮�������?WIFI����??�?
+	 * 开始扫描WIFI列表
 	 */
 	private void startScan() {
 		
@@ -182,6 +182,7 @@ implements WifiBroadCastOperations , Udpclient.UdpclientOperations{
 	}
 
 /**
+	 * 用户开始配置设备，此过程需要120秒。
  * 
  * @param SSID
  * @param Pwd
@@ -228,7 +229,7 @@ implements WifiBroadCastOperations , Udpclient.UdpclientOperations{
 
 	
 	/**
-	 * 
+	 * 获取WIFI的详细信息，如加密方式，加密算法和通道信息
 	 * @param ssid
 	 * @return
 	 */
@@ -299,12 +300,12 @@ implements WifiBroadCastOperations , Udpclient.UdpclientOperations{
 		ret.add(channel);
 		return ret;
 	}
-/**
- * 
- * @param list
- * @param ssid
- * @return
- */
+	/**
+	 * 检测ssid是否在list中
+	 * @param list
+	 * @param ssid
+	 * @return
+	 */
 	Boolean isWifiContain(List<ScanResult> list,String ssid)
 	{
 		for (ScanResult scanResult : list) {
@@ -320,7 +321,7 @@ implements WifiBroadCastOperations , Udpclient.UdpclientOperations{
 	int wifiBackupNetId = -1;
 
 /**
- * 
+	 * 备份当前已经连接的WIFI，连接完设备后，需要改回当前的配置
  * @param scannlist
  */
 	private void backupCurrentWifiState(List<ScanResult> scannlist ) 
@@ -352,7 +353,7 @@ implements WifiBroadCastOperations , Udpclient.UdpclientOperations{
 	}
 
 /**
- * 
+	 * 还原之前备份的设备信息
  */
 	public void restoreCurrentWifiState() {
 		//operations.log("restoreCurrentWifiState");
@@ -398,9 +399,9 @@ implements WifiBroadCastOperations , Udpclient.UdpclientOperations{
 	// wifi connect & scan ,when wifi enable
 	@Override
 	public void operationByType(OpretionsType type, String SSID,String pwd) {
-		Log.i(TAG, "operationByType???�?type = " + type);
+		Log.i(TAG, "operationByType!type = " + type);
 
-		operations.log("operationByType???�?type = " + type);
+		operations.log("operationByType!type = " + type);
 		if (type == OpretionsType.SCAN) {
 			//wifiHotM.scanWifiHot();
 			startScan();
