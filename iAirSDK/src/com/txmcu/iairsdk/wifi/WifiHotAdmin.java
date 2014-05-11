@@ -130,7 +130,7 @@ public class WifiHotAdmin {
 	// wep
 	private WifiConfiguration createPassHotWifiConfig(String mSSID, String mPasswd) {
 
-		//Log.i(TAG, "out createPassHotWifiConfig??¿æ?????ç»±ï¿½??ºå??æ¾?ç¼???´ç?????ä»????Wifi?????¿ç§¶??¤å????????çµ?SID =" + mSSID + " password =" + mPasswd);
+		
 		WifiConfiguration config = new WifiConfiguration();
 		config.allowedAuthAlgorithms.clear();
 		config.allowedGroupCiphers.clear();

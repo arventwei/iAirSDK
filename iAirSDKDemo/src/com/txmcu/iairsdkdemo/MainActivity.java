@@ -21,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.txmcu.iairsdk.config.XinStateManager;
 import com.txmcu.iairsdk.config.XinStateManager.ConfigType;
@@ -57,7 +58,7 @@ public class MainActivity extends Activity implements XinOperations,OnClickListe
 		editPwdEditText = (EditText) findViewById(R.id.input_pwd);
 		editSnEditText = (EditText) findViewById(R.id.input_sn);
 		editUserIdEditText= (EditText) findViewById(R.id.input_uid);
-		//iAirUtil.showProgressDialog(this);
+		showProgressDialog(this);
 		xinMgr = XinStateManager.getInstance(this);
 		xinMgr.Init();
 	}
@@ -82,9 +83,10 @@ public class MainActivity extends Activity implements XinOperations,OnClickListe
 		{
 			//TODO...
 			xinMgr.Config(editSSIDEditText.getText().toString(),
-					editPwdEditText.getText().toString(),editUserIdEditText.getText().toString(),
-					editSnEditText.getText().toString()
-					);
+					editPwdEditText.getText().toString(),
+					editSnEditText.getText().toString(),
+					editUserIdEditText.getText().toString()
+					,"","");
 			
 			showProgressDialog(this, getString(R.string.setting)
 					, getString(R.string.add_device_cooldown)+120+getString(R.string.second)
@@ -189,13 +191,20 @@ public class MainActivity extends Activity implements XinOperations,OnClickListe
 	@Override
 	public void configResult(ConfigType type) {
 		// TODO Auto-generated method stub
+		dismissDialog();
+		if (type == ConfigType.Succeed) {
+			Toast.makeText(this, "Add Ok", Toast.LENGTH_LONG).show();
+		}
+		else {
+			Toast.makeText(this, "Add Failed", Toast.LENGTH_LONG).show();
+		}
 		
 	}
 
 	@Override
 	public void log(String msg) {
 		// TODO Auto-generated method stub
-		
+		Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
 	}
 
 	

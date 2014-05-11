@@ -86,7 +86,7 @@ public class Udpclient {
 			querySnTimer.cancel();
 	}
     public void setSendWifiInfo(String ssid,String pwd,String auth_mode,String encryp_type,
-    		String channel,String _sn,String _userid)
+    		String channel,String _sn,String _userid,String vsn,String homeId)
     {
     	//check input paramter
     	//if(_userid.length() > 20 )
@@ -96,13 +96,13 @@ public class Udpclient {
     	//vsn:20
     	//flag 1 ,0-home,1-vsn
     	//home or vsn 19 bytes
-//    	String  flag = "1";
-//    	if (homeId.length()>0) {
-//    		flag = "0";
-//		}
-//    	else if (vsn.length()>0){
-//    		flag = "1";
-//		}
+    	String  flag = "1";
+    	if (homeId.length()>0) {
+    		flag = "0";
+		}
+    	else if (vsn.length()>0){
+    		flag = "1";
+		}
     	
     	if(ssid.length()>20 ||pwd.length()>20)
     	{
@@ -141,19 +141,18 @@ public class Udpclient {
     	System.arraycopy(bytes,0,send_msg,len,bytes.length);len+=10;
 
     	//bytes = flag.getBytes();
-    	//System.arraycopy(bytes, 0, send_msg, len, bytes.length);len+=1;
     	
-//    	if (flag.equals("1")) {
-//    		send_msg[len]=1;len+=1;
-//    		bytes =vsn.getBytes();
-//    		
-//        	System.arraycopy(bytes,0,send_msg,len,bytes.length);len+=19;
-//		}
-//    	else {
-//    		send_msg[len]=0;len+=1;
-//    		bytes =homeId.getBytes();
-//        	System.arraycopy(bytes,0,send_msg,len,bytes.length);len+=19;
-//		}
+    	if (flag.equals("1")) {
+    		send_msg[len]=1;len+=1;
+    		bytes =vsn.getBytes();
+    		
+        	System.arraycopy(bytes,0,send_msg,len,bytes.length);len+=19;
+		}
+    	else {
+    		send_msg[len]=0;len+=1;
+    		bytes =homeId.getBytes();
+        	System.arraycopy(bytes,0,send_msg,len,bytes.length);len+=19;
+		}
     	
     	recvingMsg = "";
     	//stateCode=100;
